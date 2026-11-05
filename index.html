@@ -124,6 +124,28 @@
   .step h3 { font-size: 1.05rem; font-weight: 700; margin-bottom: 6px; }
   .step p { margin: 0; color: var(--muted); font-size: 0.9rem; }
 
+  /* expert */
+  .expert { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: start; }
+  .expert .tv { margin: 0; border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; background: #fff; }
+  .expert .tv img { width: 100%; height: auto; }
+  .expert .tv figcaption { font-size: 0.86rem; color: var(--muted); padding: 10px 14px; border-top: 1px solid var(--line); }
+  .expert .who .name { font-size: 1.6rem; font-weight: 800; color: var(--navy); letter-spacing: -0.02em; }
+  .expert .who .role { color: var(--primary-dark); font-weight: 700; margin-top: 2px; }
+  .expert .who p { color: var(--muted); margin: 14px 0 0; }
+  .cred { margin: 20px 0 0; padding: 0; list-style: none; border-top: 1px solid var(--line); }
+  .cred li { display: grid; grid-template-columns: 92px 1fr; gap: 12px; padding: 11px 0; border-bottom: 1px solid var(--line); font-size: 0.93rem; }
+  .cred li span:first-child { color: var(--muted); font-weight: 600; }
+  .gallery { display: grid; grid-template-columns: 1.3fr 1fr 0.8fr 1fr; gap: 14px; margin-top: 40px; }
+  .gallery figure { margin: 0; }
+  .gallery img { width: 100%; height: 220px; object-fit: cover; border-radius: 8px; border: 1px solid var(--line); }
+  .gallery img.top { object-position: 50% 0; }
+  .expert, .venues { word-break: keep-all; }
+  .gallery figcaption { font-size: 0.84rem; color: var(--muted); margin-top: 8px; }
+  .venues { margin-top: 28px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+  .venue { background: var(--tint-2); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px 18px; }
+  .venue h3 { font-size: 0.95rem; font-weight: 700; color: var(--primary-dark); margin-bottom: 6px; }
+  .venue p { margin: 0; font-size: 0.86rem; color: var(--muted); line-height: 1.6; }
+
   /* partner / contact */
   .partner { background: var(--navy); color: #fff; }
   .partner .wrap { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 48px; align-items: start; padding-top: 72px; padding-bottom: 72px; }
@@ -155,6 +177,9 @@
     .products { grid-template-columns: 1fr; }
     .flow { grid-template-columns: 1fr 1fr; }
     .partner .wrap { grid-template-columns: 1fr; }
+    .expert { grid-template-columns: 1fr; gap: 28px; }
+    .gallery { grid-template-columns: 1fr 1fr; }
+    .venues { grid-template-columns: 1fr 1fr; }
     .menu { display: none; }
   }
   @media (max-width: 560px) {
@@ -162,6 +187,9 @@
     .hero { padding: 44px 0 36px; }
     section.block { padding: 52px 0; }
     .flow { grid-template-columns: 1fr; }
+    .gallery img { height: 160px; }
+    .venues { grid-template-columns: 1fr; }
+    .cred li { grid-template-columns: 76px 1fr; }
     .stats .grid { grid-template-columns: 1fr 1fr; }
     .nav .btn { display: none; }
     .visual .cap { position: static; display: block; border-radius: 0; text-align: center; padding: 8px 10px; }
@@ -180,6 +208,7 @@
     <nav class="menu" aria-label="주요 메뉴">
       <a href="#products">제품 구성</a>
       <a href="#flow">측정 흐름</a>
+      <a href="#expert">설계자 소개</a>
       <a href="#partner">기관 도입</a>
       <a href="#contact">문의</a>
       <a href="app/">측정 체험</a>
@@ -336,6 +365,47 @@
       </div>
     </section>
   </div>
+
+
+  <section class="block" id="expert">
+    <div class="wrap">
+      <div class="block-head">
+        <span class="eyebrow">Designed by a Clinician</span>
+        <h2>임상 24년 물리치료사가<br>측정 기준을 직접 설계했습니다</h2>
+        <p class="lead">병원에서 어르신의 낙상과 관절 문제를 매일 마주해 온 현장 경험을, 집에서 스스로 재는 기준으로 옮겼습니다.</p>
+      </div>
+      <div class="expert">
+        <figure class="tv">
+          <img src="img/expert/tv.jpg" alt="TV조선 「100세 인생 안녕하십니까」에 물리치료사로 출연한 정경 대표" loading="lazy" width="610" height="460">
+          <figcaption>TV조선 「100세 인생 안녕하십니까」 출연 — 물리치료사 정경</figcaption>
+        </figure>
+        <div class="who">
+          <div class="name">정경</div>
+          <div class="role">물리치료사 · 바스제로컨설팅 대표</div>
+          <p>도수치료실 센터장 출신으로 24년간 환자와 어르신을 직접 치료해 왔습니다. 낙상지키미의 판별 기준과 측정 동작, 맞춤 운동을 외부에 맡기지 않고 직접 설계했습니다.</p>
+          <ul class="cred">
+            <li><span>임상</span><span>물리치료사 24년차 · 도수치료실 센터장 출신</span></li>
+            <li><span>자격</span><span>노인생활지도사 1급 · 스포츠재활처방사 1급 · 시니어헬스케어지도사 · 사회복지사 2급</span></li>
+            <li><span>학회 · 협회</span><span>전기신경치료학회 임원 · 대한병원실무전문가협회(KAPS) 협회장</span></li>
+            <li><span>교육</span><span>한국복지사이버대학교 특임교수 · 경희대학교 의료경영 MBA 재학</span></li>
+            <li><span>방송</span><span>TV조선 「100세 인생 안녕하십니까」 출연</span></li>
+          </ul>
+        </div>
+      </div>
+      <div class="gallery">
+        <figure><img src="img/expert/clinic.jpg" alt="환자의 다리를 직접 치료하는 정경 물리치료사" loading="lazy"><figcaption>임상 현장 — 도수치료</figcaption></figure>
+        <figure><img class="top" src="img/expert/lecture.jpg" alt="화면 앞에서 강의하는 정경 대표" loading="lazy"><figcaption>공공기관 · 대학 강의</figcaption></figure>
+        <figure><img class="top" src="img/expert/exercise.jpg" alt="밴드를 이용한 균형 운동을 시범 보이는 정경 대표" loading="lazy"><figcaption>세라밴드 균형 운동 시범</figcaption></figure>
+        <figure><img src="img/expert/hall.jpg" alt="강당에서 의료기관 직원 대상으로 진행한 강의" loading="lazy"><figcaption>의료기관 직원 교육</figcaption></figure>
+      </div>
+      <div class="venues">
+        <div class="venue"><h3>복지관 · 보건소 · 시니어</h3><p>밥상공동체 종합사회복지관, 수서종합사회복지관, 양평군 보건소, 꽃동네, 노인대학 등</p></div>
+        <div class="venue"><h3>병원 · 의료기관</h3><p>세종가톨릭정형외과, 중앙한방병원, 연세정형외과, 판교새로튼튼재활의학과 등</p></div>
+        <div class="venue"><h3>공공기관 · 지자체</h3><p>강원경제진흥원, 원주 혁신도시 소상공인, 제천 리더십캠프, 소상공인연합회 등</p></div>
+        <div class="venue"><h3>대학 · 교육기관</h3><p>한국폴리텍대학, 한국복지사이버대학교(특임교수)</p></div>
+      </div>
+    </div>
+  </section>
 
   <section class="partner" id="partner">
     <div class="wrap">
