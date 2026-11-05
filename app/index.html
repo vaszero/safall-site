@@ -1,0 +1,629 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>낙상지키미 측정 체험</title>
+<style>
+  :root{
+    --bg:#F4F6F5; --card:#FFFFFF; --ink:#1D2724; --muted:#5B6763; --line:#D8E0DD;
+    --brand:#1F5E5A; --brand-2:#2E7F79; --brand-soft:#E3EFED;
+    --ok:#2F7D4F; --warn:#B7791F; --risk:#C0392B; --blue:#1F4E8C;
+    --r:16px;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:"Malgun Gothic","맑은 고딕","Apple SD Gothic Neo","Noto Sans KR",system-ui,sans-serif;font-size:18px;line-height:1.5}
+  header{background:var(--brand);color:#fff;padding:14px 20px;display:flex;align-items:center;gap:12px}
+  header h1{font-size:22px;margin:0;font-weight:800;letter-spacing:-.3px}
+  header .ver{font-size:14px;opacity:.85;border:1px solid rgba(255,255,255,.5);border-radius:999px;padding:2px 10px}
+  main{max-width:1200px;margin:0 auto;padding:20px 16px 40px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:22px}
+  h2{font-size:22px;margin:0 0 14px;color:var(--brand)}
+  label{font-weight:700}
+  .row{display:flex;gap:16px;flex-wrap:wrap;align-items:center;margin:10px 0}
+  input[type=number]{font-size:20px;padding:8px 12px;width:110px;border:1px solid var(--line);border-radius:10px}
+  .seg{display:inline-flex;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+  .seg button{border:0;background:#fff;padding:10px 18px;font-size:18px;cursor:pointer;font-family:inherit}
+  .seg button.on{background:var(--brand);color:#fff;font-weight:700}
+  .btn{font-family:inherit;font-size:20px;font-weight:700;border:0;border-radius:12px;padding:14px 22px;cursor:pointer;background:var(--brand);color:#fff}
+  .btn:hover{background:var(--brand-2)}
+  .btn.ghost{background:#fff;color:var(--brand);border:2px solid var(--brand)}
+  .btn.small{font-size:16px;padding:9px 14px}
+  .btn:disabled{opacity:.45;cursor:not-allowed}
+  .checks label{font-weight:500;display:flex;gap:10px;align-items:center;margin:6px 0}
+  .checks input{width:22px;height:22px}
+  .note{font-size:15px;color:var(--muted)}
+  .safety{background:#FFF6E5;border:1px solid #F0D9A8;border-radius:12px;padding:12px 16px;font-size:16px;margin-top:14px}
+  #setup .grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+  @media (max-width:820px){#setup .grid{grid-template-columns:1fr}}
+
+  #measure{display:none;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:18px}
+  @media (max-width:900px){#measure{grid-template-columns:1fr}}
+  .stage{position:relative;background:#0E1513;border-radius:var(--r);overflow:hidden;aspect-ratio:4/3}
+  .stage canvas{width:100%;height:100%;object-fit:contain;display:block}
+  .hud{position:absolute;left:0;right:0;top:0;padding:14px 18px;color:#fff;font-size:22px;font-weight:700;
+    background:linear-gradient(rgba(0,0,0,.6),rgba(0,0,0,0));text-shadow:0 1px 2px rgba(0,0,0,.6)}
+  .big{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;
+    font-size:min(22vw,180px);font-weight:900;color:#fff;text-shadow:0 4px 18px rgba(0,0,0,.6)}
+  .loading{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#fff;font-size:20px;text-align:center;padding:20px}
+  .panel{display:flex;flex-direction:column;gap:14px}
+  .steps{display:flex;gap:6px;flex-wrap:wrap}
+  .steps span{font-size:14px;padding:5px 10px;border-radius:999px;background:#fff;border:1px solid var(--line);color:var(--muted)}
+  .steps span.cur{background:var(--brand);border-color:var(--brand);color:#fff;font-weight:700}
+  .steps span.fin{background:var(--brand-soft);color:var(--brand)}
+  .title{font-size:26px;font-weight:800;color:var(--brand);margin:0}
+  .inst{font-size:19px;margin:0}
+  .metric{background:var(--brand-soft);border-radius:var(--r);padding:16px;text-align:center}
+  .metric .v{font-size:56px;font-weight:900;color:var(--brand);line-height:1.1}
+  .metric .l{font-size:16px;color:var(--muted)}
+  .status{font-size:18px;font-weight:700;padding:10px 14px;border-radius:12px;background:#fff;border:1px solid var(--line)}
+  .status.warn{background:#FFF6E5;border-color:#F0D9A8;color:#8A5A00}
+  .btns{display:flex;gap:10px;flex-wrap:wrap}
+
+  #result{display:none}
+  .badge{display:inline-block;font-size:28px;font-weight:900;padding:8px 22px;border-radius:999px;color:#fff}
+  table{border-collapse:collapse;width:100%;margin-top:16px;font-size:18px}
+  th,td{border-bottom:1px solid var(--line);padding:12px 10px;text-align:left;vertical-align:top}
+  th{background:var(--brand-soft);color:var(--brand)}
+  td.flag{color:var(--risk);font-weight:700}
+  td.okc{color:var(--ok);font-weight:700}
+  .disc{font-size:14px;color:var(--muted);margin-top:16px;line-height:1.6}
+</style>
+</head>
+<body>
+<header><h1>「낙상지키미」 측정 시제품</h1><span class="ver">v0.1 · 시범 버전</span> <a href="/" style="margin-left:auto;color:inherit;font-size:15px">← 홈으로</a></header>
+<main>
+
+<!-- 1. 설정 -->
+<section id="setup" class="card">
+  <h2>측정 준비</h2>
+  <div class="grid">
+    <div>
+      <div class="row"><label for="age">나이</label><input id="age" type="number" min="40" max="100" value="72"> <span class="note">의자 일어서기 기준표에 사용</span></div>
+      <div class="row"><label>성별</label>
+        <span class="seg" id="sex"><button data-v="F" class="on">여</button><button data-v="M">남</button><button data-v="">선택 안 함</button></span></div>
+      <div class="row"><label>입력</label>
+        <span class="seg" id="src"><button data-v="cam" class="on">카메라</button><button data-v="file">녹화 영상 파일</button></span>
+        <input id="file" type="file" accept="video/*" style="display:none"></div>
+      <div class="row"><label>음성 안내</label>
+        <span class="seg" id="voice"><button data-v="1" class="on">켬</button><button data-v="0">끔</button></span></div>
+    </div>
+    <div class="checks">
+      <label style="font-weight:700">측정 항목</label>
+      <label><input type="checkbox" id="c_sls" checked> ① 한발서기 (왼발·오른발 각 최대 30초)</label>
+      <label><input type="checkbox" id="c_cst" checked> ② 30초 의자 앉았다 일어서기</label>
+      <label><input type="checkbox" id="c_knee" checked> ③ 30초 제자리 무릎 교대로 올리기</label>
+      <p class="note" style="margin:8px 0 0">카메라는 2~3m 떨어진 곳, 허리 높이에 두고 머리부터 발끝까지 화면에 들어오게 하세요.</p>
+    </div>
+  </div>
+  <div class="safety">⚠ 넘어질 수 있으니 의자 등받이나 벽 가까이에서 하고, 보호자나 강사가 옆에서 지켜봐 주세요. 어지럽거나 아프면 바로 멈추세요.</div>
+  <div class="row" style="margin-top:18px"><button class="btn" id="startBtn">측정 시작</button><span class="note" id="setupMsg"></span></div>
+</section>
+
+<!-- 2. 측정 -->
+<section id="measure">
+  <div class="stage">
+    <canvas id="cv"></canvas>
+    <div class="hud" id="hud"></div>
+    <div class="big" id="big"></div>
+    <div class="loading" id="loading">AI 동작 인식 모델을 불러오는 중입니다…<br>(처음 한 번은 10~20초 걸릴 수 있습니다)</div>
+  </div>
+  <div class="panel">
+    <div class="steps" id="steps"></div>
+    <p class="title" id="tTitle"></p>
+    <p class="inst" id="tInst"></p>
+    <div class="metric"><div class="v" id="mVal">–</div><div class="l" id="mLab"></div></div>
+    <div class="status" id="status">준비 중</div>
+    <div class="btns">
+      <button class="btn small ghost" id="retryBtn">이 동작 다시</button>
+      <button class="btn small ghost" id="skipBtn">건너뛰기</button>
+      <button class="btn small ghost" id="stopBtn">측정 끝내기</button>
+    </div>
+  </div>
+</section>
+<video id="vid" playsinline muted style="display:none"></video>
+
+<!-- 3. 결과 -->
+<section id="result" class="card">
+  <h2>측정 결과</h2>
+  <div id="rTop"></div>
+  <table id="rTable"></table>
+  <div class="row" style="margin-top:18px">
+    <button class="btn" id="csvBtn">결과 저장 (엑셀용 CSV)</button>
+    <button class="btn ghost" id="jsonBtn">측정 원자료 저장 (JSON)</button>
+    <button class="btn ghost" id="againBtn">처음부터 다시</button>
+  </div>
+  <p class="disc">본 결과는 의료 진단이 아닌 건강관리(웰니스) 목적의 자가 점검 안내입니다. 판정 기준 — 한발서기: 5초 미만 시 기준 미달(Vellas 외, J Am Geriatr Soc 1997). 의자 일어서기: CDC STEADI 30-Second Chair Stand 연령·성별 평균 이하 기준. 무릎 올리기 좌우 차이·한발서기 흔들림 지수는 시제품용 임시 기준입니다.</p>
+</section>
+</main>
+
+<script type="module">
+import { PoseLandmarker, FilesetResolver, DrawingUtils } from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14";
+
+// ===== 낙상지키미 측정 로직 (화면·카메라와 분리된 순수 계산부) =====
+// 좌표: MediaPipe Pose 33 랜드마크, x·y는 0~1 정규화값 → 내부에서 픽셀로 환산해 계산
+// 모든 함수는 프레임 시각 t(ms)를 받아 동작 → 카메라·녹화 영상 모두 같은 로직 사용
+
+const LM = { LS: 11, RS: 12, LH: 23, RH: 24, LK: 25, RK: 26, LA: 27, RA: 28, LHE: 29, RHE: 30, LF: 31, RF: 32 };
+
+// ---------------- 판정 기준 (대표 임상 기준으로 교체 가능) ----------------
+const CONFIG = {
+  visibilityMin: 0.5,          // 이 값 미만이면 해당 관절이 안 보이는 것으로 처리
+  readyHoldMs: 1000,           // 전신이 이 시간 동안 계속 보이면 측정 준비 완료
+  countdownMs: 3000,
+
+  sls: {                       // 한발서기
+    maxSec: 30,
+    liftRatio: 0.08,           // 든 발목이 디딤 발목보다 다리 길이의 8% 이상 높으면 '들었음'
+    liftConfirmMs: 200,
+    touchdownMs: 300,          // 이 시간 이상 내려오면 '발 디딤'으로 종료
+    noLiftTimeoutSec: 10,
+    cutoffSec: 5,              // Vellas 외(JAGS 1997): 한 발 5초 미만 → 손상 낙상 위험 2.13배
+    swayWarn: 4.0,             // [임시값] 골반 중심 흔들림 지수(다리 길이 대비 %, 표준편차) — 대표 기준으로 교체
+  },
+  cst: {                       // 30초 의자 앉았다 일어서기
+    durationSec: 30,
+    standRatio: 0.75,          // (무릎-골반 세로거리 ÷ 정강이 길이) 이 값 초과 → 선 자세
+    sitRatio: 0.45,            // 이 값 미만 → 앉은 자세
+    // CDC STEADI 30-Second Chair Stand: 아래 횟수 '미만'이면 평균 이하
+    norms: [
+      { min: 60, max: 64, M: 14, F: 12 }, { min: 65, max: 69, M: 12, F: 11 },
+      { min: 70, max: 74, M: 12, F: 10 }, { min: 75, max: 79, M: 11, F: 10 },
+      { min: 80, max: 84, M: 10, F: 9 },  { min: 85, max: 89, M: 8, F: 8 },
+      { min: 90, max: 94, M: 7, F: 4 },
+    ],
+  },
+  knee: {                      // 제자리 무릎 교대로 올리기
+    durationSec: 30,
+    upRatio: 0.5,              // 무릎-골반 세로거리가 선 자세의 50% 이하 → '올림'
+    downRatio: 0.8,            // 80% 이상 → '내림'
+    asymWarn: 20,              // [임시값] 좌우 횟수 차이 % — 대표 기준으로 교체
+  },
+};
+
+// ---------------- 기본 계산 ----------------
+function P(lm, i, W, H) { const p = lm[i]; return { x: p.x * W, y: p.y * H, v: p.visibility ?? 1 }; }
+function dist(a, b) { return Math.hypot(a.x - b.x, a.y - b.y); }
+function visible(lm, idxs) { return idxs.every(i => lm[i] && (lm[i].visibility ?? 1) >= CONFIG.visibilityMin); }
+const LOWER = [LM.LH, LM.RH, LM.LK, LM.RK, LM.LA, LM.RA];
+function legLength(lm, W, H) {
+  const l = dist(P(lm, LM.LH, W, H), P(lm, LM.LK, W, H)) + dist(P(lm, LM.LK, W, H), P(lm, LM.LA, W, H));
+  const r = dist(P(lm, LM.RH, W, H), P(lm, LM.RK, W, H)) + dist(P(lm, LM.RK, W, H), P(lm, LM.RA, W, H));
+  return (l + r) / 2;
+}
+function mean(a) { return a.length ? a.reduce((s, v) => s + v, 0) / a.length : 0; }
+function std(a) { if (a.length < 2) return 0; const m = mean(a); return Math.sqrt(mean(a.map(v => (v - m) ** 2))); }
+const round = (v, d = 1) => Math.round(v * 10 ** d) / 10 ** d;
+
+// ---------------- 공통: 전신 확인 → 카운트다운 → 측정 ----------------
+// phase: 'position' → 'countdown' → 'running' → 'done'
+function makeGate(needIdxs) {
+  return { phase: 'position', since: null, cdStart: null, needIdxs };
+}
+function gateStep(g, lm, t) {
+  if (g.phase === 'position') {
+    if (lm && visible(lm, g.needIdxs)) {
+      if (g.since == null) g.since = t;
+      if (t - g.since >= CONFIG.readyHoldMs) { g.phase = 'countdown'; g.cdStart = t; return 'countdown_start'; }
+    } else g.since = null;
+    return null;
+  }
+  if (g.phase === 'countdown') {
+    if (t - g.cdStart >= CONFIG.countdownMs) { g.phase = 'running'; return 'run_start'; }
+    return null;
+  }
+  return null;
+}
+
+// ---------------- ① 한발서기 ----------------
+// liftFoot: 'L' | 'R' (드는 발)
+function createSLS(liftFoot) {
+  const c = CONFIG.sls;
+  const s = { kind: 'sls', liftFoot, gate: makeGate(LOWER), runStart: null, liftOn: null, liftStart: null,
+    downSince: null, endT: null, holdSec: 0, swayX: [], L: null, Ls: [], reason: '', series: [] };
+  s.update = (lm, t, W, H) => {
+    const ev = gateStep(s.gate, lm, t);
+    if (s.gate.phase === 'countdown' && lm && visible(lm, LOWER)) s.Ls.push(legLength(lm, W, H));
+    if (ev === 'run_start') { s.runStart = t; s.L = mean(s.Ls) || (lm ? legLength(lm, W, H) : 1); }
+    if (s.gate.phase !== 'running') return { phase: s.gate.phase, ev };
+    const elapsedSec = s.liftStart != null ? (t - s.liftStart) / 1000 : 0;
+    if (!lm || !visible(lm, LOWER)) return { phase: 'running', ev, holdSec: elapsedSec, lifted: s.liftStart != null, lost: true };
+    const la = P(lm, liftFoot === 'L' ? LM.LA : LM.RA, W, H);
+    const sa = P(lm, liftFoot === 'L' ? LM.RA : LM.LA, W, H);
+    const lifted = (sa.y - la.y) > c.liftRatio * s.L;
+    const hip = { x: (P(lm, LM.LH, W, H).x + P(lm, LM.RH, W, H).x) / 2 };
+    s.series.push([Math.round(t - s.runStart), lifted ? 1 : 0, round((sa.y - la.y) / s.L * 100, 1)]);
+
+    if (s.liftStart == null) {                       // 아직 발을 안 든 상태
+      if (lifted) { if (s.liftOn == null) s.liftOn = t; if (t - s.liftOn >= c.liftConfirmMs) { s.liftStart = s.liftOn; return { phase: 'running', ev: 'hold_start', holdSec: 0, lifted: true }; } }
+      else s.liftOn = null;
+      if ((t - s.runStart) / 1000 > c.noLiftTimeoutSec) return finish(t, '발을 들지 않음');
+      return { phase: 'running', ev, holdSec: 0, lifted: false };
+    }
+    s.swayX.push(hip.x);
+    const hold = (t - s.liftStart) / 1000;
+    if (!lifted) { if (s.downSince == null) s.downSince = t; if (t - s.downSince >= c.touchdownMs) return finish(s.downSince, '발 디딤'); }
+    else s.downSince = null;
+    if (hold >= c.maxSec) return finish(s.liftStart + c.maxSec * 1000, '최대 시간 도달');
+    return { phase: 'running', ev, holdSec: hold, lifted: true };
+  };
+  function finish(endT, reason) {
+    s.endT = endT; s.reason = reason;
+    s.holdSec = s.liftStart != null ? Math.max(0, (endT - s.liftStart) / 1000) : 0;
+    s.gate.phase = 'done';
+    return { phase: 'done', ev: 'done', holdSec: s.holdSec };
+  }
+  s.result = () => {
+    const sway = s.L ? std(s.swayX) / s.L * 100 : 0;
+    return { holdSec: round(s.holdSec, 1), sway: round(sway, 1), reason: s.reason,
+      flagHold: s.holdSec < c.cutoffSec, flagSway: sway > c.swayWarn };
+  };
+  return s;
+}
+
+// ---------------- ② 30초 의자 앉았다 일어서기 ----------------
+function createCST() {
+  const c = CONFIG.cst;
+  const s = { kind: 'cst', gate: makeGate(LOWER), runStart: null, state: null, count: 0, lastRatio: 0, series: [] };
+  function ratio(lm, W, H) {
+    const side = (h, k, a) => { const H_ = P(lm, h, W, H), K = P(lm, k, W, H), A = P(lm, a, W, H);
+      const shin = Math.max(1, Math.abs(A.y - K.y)); return (K.y - H_.y) / shin; };
+    return (side(LM.LH, LM.LK, LM.LA) + side(LM.RH, LM.RK, LM.RA)) / 2;
+  }
+  s.update = (lm, t, W, H) => {
+    const ev = gateStep(s.gate, lm, t);
+    if (ev === 'run_start') { s.runStart = t; }
+    if (s.gate.phase !== 'running') return { phase: s.gate.phase, ev, count: 0 };
+    const el = (t - s.runStart) / 1000;
+    if (el >= c.durationSec) {
+      // STEADI: 30초 종료 시 절반 이상 일어선 상태면 1회로 인정
+      if (s.state === 'sit' && s.lastRatio >= (c.sitRatio + c.standRatio) / 2) s.count += 1;
+      s.gate.phase = 'done'; return { phase: 'done', ev: 'done', count: s.count };
+    }
+    if (!lm || !visible(lm, LOWER)) return { phase: 'running', ev, count: s.count, remain: c.durationSec - el, lost: true };
+    const r = ratio(lm, W, H); s.lastRatio = r;
+    s.series.push([Math.round(t - s.runStart), round(r, 2)]);
+    let rep = null;
+    if (s.state == null) s.state = r > c.standRatio ? 'stand' : 'sit';
+    else if (s.state === 'sit' && r > c.standRatio) { s.state = 'stand'; s.count += 1; rep = 'rep'; }
+    else if (s.state === 'stand' && r < c.sitRatio) { s.state = 'sit'; }
+    return { phase: 'running', ev: rep || ev, count: s.count, remain: c.durationSec - el, posture: s.state };
+  };
+  s.result = (age, sex) => {
+    const n = c.norms.find(x => age >= x.min && age <= x.max);
+    const cut = n && (sex === 'M' || sex === 'F') ? n[sex] : null;
+    return { count: s.count, cutoff: cut, flag: cut != null ? s.count < cut : null };
+  };
+  return s;
+}
+
+// ---------------- ③ 제자리 무릎 교대로 올리기 ----------------
+function createKnee() {
+  const c = CONFIG.knee;
+  const s = { kind: 'knee', gate: makeGate(LOWER), runStart: null, base: { L: [], R: [] }, T: null,
+    st: { L: 'down', R: 'down' }, cnt: { L: 0, R: 0 }, peak: { L: [], R: [] }, cur: { L: 1, R: 1 }, series: [] };
+  const vert = (lm, side, W, H) => {
+    const h = P(lm, side === 'L' ? LM.LH : LM.RH, W, H), k = P(lm, side === 'L' ? LM.LK : LM.RK, W, H);
+    return k.y - h.y;
+  };
+  s.update = (lm, t, W, H) => {
+    const ev = gateStep(s.gate, lm, t);
+    if (s.gate.phase === 'countdown' && lm && visible(lm, LOWER)) { s.base.L.push(vert(lm, 'L', W, H)); s.base.R.push(vert(lm, 'R', W, H)); }
+    if (ev === 'run_start') { s.runStart = t; s.T = { L: mean(s.base.L) || 1, R: mean(s.base.R) || 1 }; }
+    if (s.gate.phase !== 'running') return { phase: s.gate.phase, ev, cnt: s.cnt };
+    const el = (t - s.runStart) / 1000;
+    if (el >= c.durationSec) { s.gate.phase = 'done'; return { phase: 'done', ev: 'done', cnt: s.cnt }; }
+    if (!lm || !visible(lm, LOWER)) return { phase: 'running', ev, cnt: s.cnt, remain: c.durationSec - el, lost: true };
+    let rep = null;
+    const row = [Math.round(t - s.runStart)];
+    for (const side of ['L', 'R']) {
+      const r = vert(lm, side, W, H) / s.T[side];
+      row.push(round(r, 2));
+      if (s.st[side] === 'down' && r < c.upRatio) { s.st[side] = 'up'; s.cnt[side] += 1; s.cur[side] = r; rep = 'rep'; }
+      else if (s.st[side] === 'up') {
+        s.cur[side] = Math.min(s.cur[side], r);
+        if (r > c.downRatio) { s.st[side] = 'down'; s.peak[side].push(s.cur[side]); }
+      }
+    }
+    s.series.push(row);
+    return { phase: 'running', ev: rep || ev, cnt: s.cnt, remain: c.durationSec - el };
+  };
+  s.result = () => {
+    for (const side of ['L', 'R']) if (s.st[side] === 'up') { s.peak[side].push(s.cur[side]); s.st[side] = 'down'; }
+    const L = s.cnt.L, R = s.cnt.R, tot = L + R;
+    const asym = Math.max(L, R) ? Math.abs(L - R) / Math.max(L, R) * 100 : 0;
+    const h = side => s.peak[side].length ? round((1 - mean(s.peak[side])) * 100, 0) : 0; // 선 자세 대비 무릎이 골반 쪽으로 올라간 정도(%)
+    return { L, R, total: tot, asym: round(asym, 0), heightL: h('L'), heightR: h('R'), flag: tot > 0 && asym > c.asymWarn };
+  };
+  return s;
+}
+
+// ---------------- 종합 판정 (비의료 웰니스 안내 문구) ----------------
+function summarize(r) {
+  const flags = [];
+  if (r.slsL && r.slsL.flagHold) flags.push('왼발 서기 유지 시간');
+  if (r.slsR && r.slsR.flagHold) flags.push('오른발 서기 유지 시간');
+  if (r.cst && r.cst.flag) flags.push('하체 근력(의자 일어서기)');
+  const watch = [];
+  if ((r.slsL && r.slsL.flagSway) || (r.slsR && r.slsR.flagSway)) watch.push('한발서기 흔들림');
+  if (r.knee && r.knee.flag) watch.push('무릎 올리기 좌우 차이');
+  let level = '양호', msg = '현재 측정한 항목에서는 눈에 띄는 위험 신호가 보이지 않습니다. 매달 같은 방법으로 측정해 변화를 지켜보세요.';
+  if (flags.length >= 2) { level = '점검 권장'; msg = '여러 항목이 기준보다 낮게 나왔습니다. 가까운 보건소·의료기관에서 균형·근력 점검을 받아 보시길 권장합니다.'; }
+  else if (flags.length === 1) { level = '관심 필요'; msg = '한 항목이 기준보다 낮게 나왔습니다. 맞춤 운동을 시작하고 다음 달 다시 측정해 변화를 확인하세요.'; }
+  else if (watch.length) { level = '관찰'; msg = '기준 미달 항목은 없지만 흔들림이나 좌우 차이가 보입니다. 다음 측정에서 변화를 확인하세요.'; }
+  return { level, msg, flags, watch };
+}
+
+if (typeof module !== 'undefined') module.exports = { CONFIG, LM, createSLS, createCST, createKnee, summarize };
+
+
+const $ = id => document.getElementById(id);
+// 미리보기 창(다른 화면 안에 끼워진 상태)에서는 카메라·인터넷이 막혀 작동하지 않음 → 안내
+let framed = false; try { framed = window.self !== window.top; } catch (e) { framed = true; }
+if (framed) {
+  const w = document.createElement('div');
+  w.className = 'safety'; w.style.cssText = 'background:#FDECEA;border-color:#F5B7B1;font-size:18px;margin:0 0 16px';
+  w.innerHTML = '<b>지금은 미리보기 창이라 카메라와 AI 모델을 쓸 수 없습니다.</b><br>이 파일을 컴퓨터에 저장한 뒤, 파일을 마우스 오른쪽 버튼으로 눌러 <b>연결 프로그램 → Chrome</b>으로 열어 주세요.';
+  document.querySelector('main').prepend(w);
+}
+const MODEL = "https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_full/float16/1/pose_landmarker_full.task";
+const WASM = "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/wasm";
+
+// ---------- 설정 화면 ----------
+const opt = { sex: 'F', src: 'cam', voice: true };
+for (const id of ['sex', 'src', 'voice']) {
+  $(id).addEventListener('click', e => {
+    const b = e.target.closest('button'); if (!b) return;
+    $(id).querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b));
+    const v = b.dataset.v;
+    if (id === 'sex') opt.sex = v; if (id === 'voice') opt.voice = v === '1';
+    if (id === 'src') { opt.src = v; $('setupMsg').textContent = ''; if (v === 'file') $('file').click(); }
+  });
+}
+$('file').addEventListener('change', () => { const f = $('file').files[0]; $('setupMsg').textContent = f ? '선택한 영상: ' + f.name : ''; });
+
+// ---------- 음성 안내 (기기 내장 음성, 서버 전송 없음) ----------
+let koVoice = null;
+function pickVoice() { const vs = speechSynthesis.getVoices(); koVoice = vs.find(v => v.lang && v.lang.startsWith('ko')) || null; }
+if ('speechSynthesis' in window) { pickVoice(); speechSynthesis.onvoiceschanged = pickVoice; }
+function say(text, interrupt = true) {
+  if (!opt.voice || !('speechSynthesis' in window)) return;
+  if (interrupt) speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text); u.lang = 'ko-KR'; u.rate = 0.9; if (koVoice) u.voice = koVoice;
+  speechSynthesis.speak(u);
+}
+
+// ---------- 측정 순서 ----------
+const STEPS = {
+  slsStandL: { title: '① 왼발로 서기', short: '왼발 서기', inst: '의자 등받이 옆에 서서, 준비되면 오른발을 들어 왼발로만 서세요. 최대 30초입니다.',
+    voice: '왼발로 서기입니다. 준비되면 오른발을 들어 왼발로만 서세요.', make: () => createSLS('R') },
+  slsStandR: { title: '① 오른발로 서기', short: '오른발 서기', inst: '이번에는 왼발을 들어 오른발로만 서세요. 최대 30초입니다.',
+    voice: '오른발로 서기입니다. 준비되면 왼발을 들어 오른발로만 서세요.', make: () => createSLS('L') },
+  cst: { title: '② 30초 의자 앉았다 일어서기', short: '의자 일어서기', inst: '의자에 앉아 두 팔을 가슴 앞에서 X자로 교차하세요. ‘시작’ 소리에 맞춰 30초 동안 완전히 일어섰다 앉기를 반복합니다.',
+    voice: '의자 앉았다 일어서기입니다. 의자에 앉아 두 팔을 가슴 앞에 교차하세요. 시작 소리에 맞춰 삼십 초 동안 일어섰다 앉기를 반복합니다.', make: () => createCST() },
+  knee: { title: '③ 제자리 무릎 교대로 올리기', short: '무릎 올리기', inst: '제자리에 서서 30초 동안 왼쪽·오른쪽 무릎을 번갈아 골반 높이 쪽으로 들어 올리세요.',
+    voice: '무릎 올리기입니다. 제자리에 서서 삼십 초 동안 양쪽 무릎을 번갈아 높이 들어 올리세요.', make: () => createKnee() },
+};
+let order = [], idx = 0, cur = null, results = {}, series = {}, lastPhase = null, doneAt = null, lastSpoken = {};
+let landmarker = null, drawer = null, running = false, lastTs = -1, stream = null;
+const video = $('vid'), cv = $('cv'), ctx = cv.getContext('2d');
+
+$('startBtn').addEventListener('click', async () => {
+  order = [];
+  if ($('c_sls').checked) order.push('slsStandL', 'slsStandR');
+  if ($('c_cst').checked) order.push('cst');
+  if ($('c_knee').checked) order.push('knee');
+  if (!order.length) { $('setupMsg').textContent = '측정 항목을 하나 이상 선택하세요.'; return; }
+  if (opt.src === 'file' && !$('file').files[0]) { $('setupMsg').textContent = '녹화 영상 파일을 먼저 선택하세요.'; $('file').click(); return; }
+  if ('speechSynthesis' in window) speechSynthesis.speak(new SpeechSynthesisUtterance('')); // 일부 브라우저의 음성 잠금 해제
+  $('setup').style.display = 'none'; $('measure').style.display = 'grid';
+  results = {}; series = {}; idx = 0;
+  try {
+    await initModel();
+    await initSource();
+  } catch (err) {
+    const m = String(err && err.message ? err.message : err);
+    $('loading').innerHTML = '시작하지 못했습니다.<br><br>' +
+      (/fetch|network|load/i.test(m) ? 'AI 모델을 내려받지 못했습니다. 인터넷 연결을 확인하고, 미리보기 창이 아닌 크롬에서 파일을 직접 열어 주세요.'
+       : /Permission|NotAllowed|denied/i.test(m) ? '카메라 사용이 허용되지 않았습니다. 주소창 왼쪽 자물쇠(또는 카메라) 아이콘을 눌러 카메라를 허용한 뒤 새로고침해 주세요.'
+       : /NotFound|device/i.test(m) ? '카메라를 찾지 못했습니다. 카메라가 연결돼 있는지, 다른 프로그램(줌 등)이 쓰고 있지 않은지 확인해 주세요.'
+       : m) + '<br><br><button class="btn small" onclick="location.reload()">처음으로</button>';
+    console.error(err); return;
+  }
+  $('loading').style.display = 'none';
+  startStep(); running = true; loop();
+});
+
+async function initModel() {
+  if (landmarker) return;
+  const fs = await FilesetResolver.forVisionTasks(WASM);
+  const mk = delegate => PoseLandmarker.createFromOptions(fs, {
+    baseOptions: { modelAssetPath: MODEL, delegate }, runningMode: 'VIDEO', numPoses: 1,
+    minPoseDetectionConfidence: 0.5, minPosePresenceConfidence: 0.5, minTrackingConfidence: 0.5 });
+  try { landmarker = await mk('GPU'); } catch (e) { landmarker = await mk('CPU'); }
+  drawer = new DrawingUtils(ctx);
+}
+async function initSource() {
+  if (opt.src === 'cam') {
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) throw new Error('이 브라우저에서는 카메라를 쓸 수 없습니다. 크롬이나 엣지로 열어 주세요.');
+    stream = await navigator.mediaDevices.getUserMedia({ video: { width: { ideal: 1280 }, height: { ideal: 720 }, facingMode: 'user' }, audio: false });
+    video.srcObject = stream;
+  } else {
+    video.srcObject = null; video.src = URL.createObjectURL($('file').files[0]); video.loop = false;
+  }
+  await video.play();
+  await new Promise(r => video.readyState >= 2 ? r() : video.addEventListener('loadeddata', r, { once: true }));
+  cv.width = video.videoWidth; cv.height = video.videoHeight;
+}
+
+function now() { return opt.src === 'cam' ? performance.now() : video.currentTime * 1000; }
+const mirror = () => opt.src === 'cam';
+
+function renderSteps() {
+  $('steps').innerHTML = order.map((k, i) => `<span class="${i < idx ? 'fin' : i === idx ? 'cur' : ''}">${STEPS[k].short}</span>`).join('');
+}
+function startStep() {
+  const k = order[idx]; cur = STEPS[k].make(); lastPhase = null; doneAt = null; lastSpoken = {};
+  renderSteps(); $('tTitle').textContent = STEPS[k].title; $('tInst').textContent = STEPS[k].inst;
+  $('mVal').textContent = '–'; $('mLab').textContent = ''; $('big').textContent = '';
+  say(STEPS[k].voice + ' 몸 전체가 화면에 보이도록 서 주세요.');
+}
+function nextStep() {
+  idx += 1;
+  if (idx >= order.length) return finishAll();
+  startStep();
+}
+$('retryBtn').onclick = () => { if (running) startStep(); };
+$('skipBtn').onclick = () => { if (running) nextStep(); };
+$('stopBtn').onclick = () => finishAll();
+
+function missingText(lm) {
+  if (!lm) return '사람이 보이지 않습니다. 화면 가운데에 서 주세요.';
+  const need = { '골반': [23, 24], '무릎': [25, 26], '발목': [27, 28] }; const miss = [];
+  for (const [n, ids] of Object.entries(need)) if (!ids.every(i => (lm[i].visibility ?? 1) >= CONFIG.visibilityMin)) miss.push(n);
+  return miss.length ? miss.join('·') + '이(가) 잘 안 보입니다. 조금 뒤로 물러나 전신이 보이게 해 주세요.' : '좋습니다. 그대로 계세요.';
+}
+
+function loop() {
+  if (!running) return;
+  if (opt.src === 'file' && video.ended) { finishAll(); return; }
+  const t = now();
+  if (video.readyState >= 2 && t > lastTs) {
+    lastTs = t;
+    const res = landmarker.detectForVideo(video, opt.src === 'cam' ? t : Math.round(t) + 1);
+    const lm = res.landmarks && res.landmarks[0] ? res.landmarks[0] : null;
+    draw(lm);
+    step(lm, t);
+  }
+  requestAnimationFrame(loop);
+}
+
+function draw(lm) {
+  ctx.save(); ctx.clearRect(0, 0, cv.width, cv.height);
+  if (mirror()) { ctx.translate(cv.width, 0); ctx.scale(-1, 1); }
+  ctx.drawImage(video, 0, 0, cv.width, cv.height);
+  if (lm) {
+    drawer.drawConnectors(lm, PoseLandmarker.POSE_CONNECTIONS, { color: '#7CF2D6', lineWidth: 4 });
+    drawer.drawLandmarks(lm.filter((_, i) => i >= 11), { color: '#FFFFFF', fillColor: '#1F5E5A', lineWidth: 2, radius: 5 });
+  }
+  ctx.restore();
+}
+
+function step(lm, t) {
+  if (!cur) return;
+  const k = order[idx];
+  if (cur.gate.phase === 'done') {           // 결과 표시 후 다음 동작으로
+    if (doneAt != null && t - doneAt > 3500) { doneAt = null; nextStep(); }
+    return;
+  }
+  const st = cur.update(lm, t, cv.width, cv.height);
+  const phase = st.phase;
+  const status = $('status'); status.classList.remove('warn');
+
+  if (phase === 'position') {
+    $('hud').textContent = '자세 확인 중'; $('big').textContent = '';
+    status.textContent = missingText(lm); if (!lm || !/좋습니다/.test(status.textContent)) status.classList.add('warn');
+  } else if (phase === 'countdown') {
+    const left = Math.ceil((CONFIG.countdownMs - (t - cur.gate.cdStart)) / 1000);
+    $('big').textContent = left > 0 ? left : '';
+    $('hud').textContent = '준비하세요'; status.textContent = '곧 시작합니다';
+    if (st.ev === 'countdown_start') say('준비하세요. 셋, 둘, 하나.');
+  } else if (phase === 'running') {
+    $('big').textContent = '';
+    if (st.ev === 'run_start') say('시작');
+    if (st.lost) { status.textContent = '몸이 화면 밖으로 나갔습니다. 전신이 보이게 해 주세요.'; status.classList.add('warn'); }
+    if (cur.kind === 'sls') {
+      if (!st.lifted) { $('mVal').textContent = '0.0'; status.textContent = '발을 들어 주세요'; }
+      else { $('mVal').textContent = st.holdSec.toFixed(1); if (!st.lost) status.textContent = '좋습니다. 버티세요!'; }
+      $('mLab').textContent = '초 유지'; $('hud').textContent = STEPS[k].short + ' 측정 중';
+      if (st.ev === 'hold_start') say('시간을 잽니다.');
+      for (const s of [10, 20]) if (st.holdSec >= s && !lastSpoken['h' + s]) { lastSpoken['h' + s] = 1; say(s === 10 ? '십 초' : '이십 초'); }
+    } else if (cur.kind === 'cst') {
+      $('mVal').textContent = st.count; $('mLab').textContent = `회 · 남은 시간 ${Math.max(0, Math.ceil(st.remain))}초`;
+      $('hud').textContent = '의자 일어서기 측정 중'; if (!st.lost) status.textContent = st.posture === 'stand' ? '섰습니다 → 앉으세요' : '앉았습니다 → 일어서세요';
+      if (st.ev === 'rep') say(String(st.count));
+      remainVoice(st.remain);
+    } else if (cur.kind === 'knee') {
+      $('mVal').textContent = `${st.cnt.L} : ${st.cnt.R}`; $('mLab').textContent = `왼쪽 : 오른쪽 · 남은 시간 ${Math.max(0, Math.ceil(st.remain))}초`;
+      $('hud').textContent = '무릎 올리기 측정 중'; if (!st.lost) status.textContent = '번갈아 높이 올리세요';
+      remainVoice(st.remain);
+    }
+  }
+  if (phase === 'done' && lastPhase !== 'done') {
+    let msg = '';
+    if (cur.kind === 'sls') { const r = cur.result(); results[k] = r; msg = `${r.holdSec}초 유지했습니다.`; $('mVal').textContent = r.holdSec; }
+    if (cur.kind === 'cst') { const r = cur.result(+$('age').value, opt.sex); results[k] = r; msg = `${r.count}회 했습니다.`; $('mVal').textContent = r.count; }
+    if (cur.kind === 'knee') { const r = cur.result(); results[k] = r; msg = `왼쪽 ${r.L}회, 오른쪽 ${r.R}회입니다.`; }
+    series[k] = cur.series;
+    status.textContent = '완료 — ' + msg; $('hud').textContent = '완료';
+    say('그만. ' + msg + (idx + 1 < order.length ? ' 잠시 쉬었다가 다음 동작을 합니다.' : ' 모든 측정이 끝났습니다.'));
+    doneAt = t;
+  }
+  lastPhase = phase;
+}
+function remainVoice(remain) {
+  if (remain <= 10.05 && !lastSpoken.r10) { lastSpoken.r10 = 1; say('십 초 남았습니다.', false); }
+}
+
+// ---------- 결과 ----------
+function finishAll() {
+  running = false;
+  if (stream) { stream.getTracks().forEach(tr => tr.stop()); stream = null; }
+  try { video.pause(); } catch (e) {}
+  $('measure').style.display = 'none'; $('result').style.display = 'block';
+  if (!Object.keys(results).length) {
+    $('rTop').innerHTML = '<p style="font-size:20px;margin:0">끝까지 측정된 항목이 없습니다. 처음부터 다시 측정해 주세요.</p>';
+    $('rTable').innerHTML = ''; return;
+  }
+  const sum = summarize({ slsL: results.slsStandL, slsR: results.slsStandR, cst: results.cst, knee: results.knee });
+  const color = { '양호': 'var(--ok)', '관찰': 'var(--blue)', '관심 필요': 'var(--warn)', '점검 권장': 'var(--risk)' }[sum.level];
+  $('rTop').innerHTML = `<span class="badge" style="background:${color}">${sum.level}</span>
+    <p style="font-size:20px;margin:14px 0 0">${sum.msg}</p>`;
+  const rows = [['측정 항목', '결과', '기준·해석']];
+  const cell = (txt, flag) => ({ txt, cls: flag === true ? 'flag' : flag === false ? 'okc' : '' });
+  for (const [k, lab] of [['slsStandL', '왼발로 서기'], ['slsStandR', '오른발로 서기']]) {
+    const r = results[k]; if (!r) continue;
+    rows.push([lab, cell(`${r.holdSec}초 (흔들림 지수 ${r.sway})`, r.flagHold),
+      cell(`5초 이상 권장 — ${r.flagHold ? '기준 미달' : '기준 충족'}${r.flagSway ? ' · 흔들림 큼' : ''} (${r.reason})`, r.flagHold)]);
+  }
+  if (results.cst) {
+    const r = results.cst; const age = +$('age').value;
+    rows.push(['의자 앉았다 일어서기 (30초)', cell(`${r.count}회`, r.flag),
+      cell(r.cutoff != null ? `${age}세 ${opt.sex === 'M' ? '남성' : '여성'} 평균 하한 ${r.cutoff}회 — ${r.flag ? '평균 이하' : '평균 이상'}` : '나이(60~94세)·성별을 입력하면 기준과 비교합니다', r.flag)]);
+  }
+  if (results.knee) {
+    const r = results.knee;
+    rows.push(['무릎 교대로 올리기 (30초)', cell(`왼 ${r.L}회 · 오른 ${r.R}회 (합계 ${r.total}회)`, null),
+      cell(`좌우 차이 ${r.asym}% ${r.flag ? '— 차이 큼' : ''} · 올린 높이 왼 ${r.heightL}% / 오른 ${r.heightR}%`, r.flag ? true : null)]);
+  }
+  $('rTable').innerHTML = rows.map((row, i) => '<tr>' + row.map(c => {
+    if (i === 0) return `<th>${c}</th>`;
+    if (typeof c === 'string') return `<td><b>${c}</b></td>`;
+    return `<td class="${c.cls}">${c.txt}</td>`;
+  }).join('') + '</tr>').join('');
+  window.__RESULT__ = { sum, results };
+}
+
+function stamp() { const d = new Date(), p = n => String(n).padStart(2, '0'); return `${d.getFullYear()}${p(d.getMonth() + 1)}${p(d.getDate())}_${p(d.getHours())}${p(d.getMinutes())}`; }
+function save(name, text, type) {
+  const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([text], { type })); a.download = name;
+  document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 500);
+}
+$('csvBtn').onclick = () => {
+  const r = results, age = $('age').value, sex = opt.sex || '';
+  const sum = summarize({ slsL: r.slsStandL, slsR: r.slsStandR, cst: r.cst, knee: r.knee });
+  const head = ['측정일시', '나이', '성별', '왼발서기_초', '왼발서기_흔들림', '오른발서기_초', '오른발서기_흔들림', '의자일어서기_회', '의자_기준하한', '무릎_왼', '무릎_오른', '무릎_좌우차이%', '종합'];
+  const v = [new Date().toLocaleString('ko-KR'), age, sex, r.slsStandL?.holdSec ?? '', r.slsStandL?.sway ?? '', r.slsStandR?.holdSec ?? '', r.slsStandR?.sway ?? '',
+    r.cst?.count ?? '', r.cst?.cutoff ?? '', r.knee?.L ?? '', r.knee?.R ?? '', r.knee?.asym ?? '', sum.level];
+  save(`낙상지키미_결과_${stamp()}.csv`, '﻿' + head.join(',') + '\n' + v.map(x => `"${x}"`).join(',') + '\n', 'text/csv;charset=utf-8');
+};
+$('jsonBtn').onclick = () => {
+  save(`낙상지키미_원자료_${stamp()}.json`, JSON.stringify({ 측정일시: new Date().toISOString(), 나이: $('age').value, 성별: opt.sex,
+    입력: opt.src, 기준: CONFIG, 결과: results, 시계열: series,
+    시계열_설명: { 한발서기: '[경과ms, 발듦(1/0), 두 발목 높이차(다리길이 대비%)]', 의자일어서기: '[경과ms, 무릎-골반 세로거리/정강이길이]', 무릎올리기: '[경과ms, 왼쪽 비율, 오른쪽 비율] (1=선 자세, 작을수록 높이 올림)' } }, null, 1), 'application/json');
+};
+$('againBtn').onclick = () => { $('result').style.display = 'none'; $('setup').style.display = 'block'; $('loading').style.display = 'flex'; lastTs = -1; };
+</script>
+</body>
+</html>
