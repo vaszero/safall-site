@@ -180,13 +180,15 @@
   .expert .tv { margin: 0; border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; background: #fff; }
   .expert .tv img { width: 100%; height: auto; }
   .expert .tv figcaption { font-size: 0.86rem; color: var(--muted); padding: 10px 14px; border-top: 1px solid var(--line); }
+  .expert .who .id { display: flex; align-items: center; gap: 16px; }
+  .expert .who .avatar { width: 76px; height: 76px; border-radius: 50%; object-fit: cover; border: 3px solid #fff; box-shadow: 0 0 0 1px var(--line), 0 6px 16px rgba(11,46,63,0.12); flex: none; }
   .expert .who .name { font-size: 1.6rem; font-weight: 800; color: var(--navy); letter-spacing: -0.02em; }
   .expert .who .role { color: var(--primary-dark); font-weight: 700; margin-top: 2px; }
   .expert .who p { color: var(--muted); margin: 14px 0 0; }
   .cred { margin: 20px 0 0; padding: 0; list-style: none; border-top: 1px solid var(--line); }
   .cred li { display: grid; grid-template-columns: 92px 1fr; gap: 12px; padding: 11px 0; border-bottom: 1px solid var(--line); font-size: 0.93rem; }
   .cred li span:first-child { color: var(--muted); font-weight: 600; }
-  .gallery { display: grid; grid-template-columns: 1.15fr 1.15fr 0.7fr 1fr; gap: 14px; margin-top: 40px; }
+  .gallery { display: grid; grid-template-columns: 1.4fr 0.8fr 1.2fr; gap: 14px; margin-top: 40px; }
   .gallery figure { margin: 0; }
   .gallery img { width: 100%; height: 220px; object-fit: cover; border-radius: 8px; border: 1px solid var(--line); }
   .gallery img.top { object-position: 50% 0; }
@@ -196,6 +198,43 @@
   .venue { background: var(--tint-2); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px 18px; }
   .venue h3 { font-size: 0.95rem; font-weight: 700; color: var(--primary-dark); margin-bottom: 6px; }
   .venue p { margin: 0; font-size: 0.86rem; color: var(--muted); line-height: 1.6; }
+
+  /* how-to flow */
+  .howto { margin-bottom: 28px; }
+  .hsteps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(5, 1fr); gap: 28px; }
+  .hs { position: relative; background: #fff; border: 1.5px solid #BFD6E2; border-radius: 14px; display: grid; grid-template-rows: auto 1fr auto; overflow: visible; }
+  .hs:not(:last-child)::after { content: ""; position: absolute; right: -22px; top: 50%; width: 16px; height: 16px; background: var(--primary-dark); clip-path: polygon(0 0, 100% 50%, 0 100%); transform: translateY(-50%); }
+  .hh { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 14px 8px 6px; font-weight: 800; font-size: 1.08rem; color: var(--navy); white-space: nowrap; }
+  .hh b { width: 26px; height: 26px; border-radius: 50%; background: var(--primary-dark); color: #fff; display: grid; place-items: center; font-size: 0.85rem; }
+  .hv { display: flex; align-items: center; justify-content: center; padding: 8px 10px; min-height: 150px; }
+  .hv svg { width: 100%; max-width: 160px; height: auto; }
+  .hs p { margin: 0; padding: 12px 10px 14px; background: var(--tint); border-radius: 0 0 12px 12px; text-align: center; font-weight: 700; font-size: 0.9rem; line-height: 1.45; color: var(--ink); }
+  .talk { position: relative; width: 120px; height: 120px; }
+  .talk img { width: 112px; height: 112px; border-radius: 50%; object-fit: cover; border: 3px solid #fff; box-shadow: 0 0 0 1.5px #BFD6E2; }
+  .talk span { position: absolute; right: -26px; top: -4px; background: #fff; border: 2px solid var(--primary-dark); border-radius: 16px; padding: 4px 12px; font-weight: 800; font-size: 1rem; color: var(--navy); }
+  .talk i { position: absolute; right: -2px; top: 26px; width: 10px; height: 10px; background: #fff; border-right: 2px solid var(--primary-dark); border-bottom: 2px solid var(--primary-dark); transform: rotate(45deg); }
+  .acts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; width: 100%; }
+  .acts figure { margin: 0; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; background: #F7FAFB; }
+  .acts img { width: 100%; aspect-ratio: 3 / 5; object-fit: cover; display: block; }
+  .acts figcaption { overflow-wrap: normal; word-break: keep-all; letter-spacing: -0.03em; font-size: 0.66rem; font-weight: 700; text-align: center; padding: 3px 1px; color: var(--ink); line-height: 1.25; }
+  .hreport { margin: 26px 0 0 auto; width: calc((100% - 112px) / 5 * 2 + 28px); min-width: 300px; display: flex; align-items: center; gap: 14px; background: var(--navy); color: #fff; border-radius: 14px; padding: 16px 18px; position: relative; }
+  .hreport::before { content: ""; position: absolute; top: -20px; right: calc((100% - 28px) / 4 - 8px); width: 16px; height: 14px; background: var(--primary-dark); clip-path: polygon(0 0, 100% 0, 50% 100%); }
+  .hreport svg { width: 48px; height: 48px; flex: none; }
+  .hreport b { display: block; font-size: 1.05rem; }
+  .hreport span { font-size: 0.88rem; color: #BFE3EF; }
+  .howto-note { margin: 10px 0 0; font-size: 0.82rem; color: var(--muted); text-align: right; }
+  @media (max-width: 960px) {
+    .hsteps { grid-template-columns: 1fr; gap: 26px; max-width: 420px; margin: 0 auto; }
+    .hs { grid-template-columns: 172px 1fr; grid-template-rows: auto auto; }
+    .hh { grid-column: 1 / -1; justify-content: flex-start; padding: 14px 16px 4px; }
+    .hv { min-height: 0; padding: 6px 8px 12px 14px; }
+    .hs p { border-radius: 0 0 12px 0; display: flex; align-items: center; text-align: left; padding: 12px 14px; margin: 6px 0 0; border-radius: 10px 0 12px 0; }
+    .hs:not(:last-child)::after { right: auto; left: 50%; top: auto; bottom: -21px; transform: translateX(-50%) rotate(90deg); }
+    .hreport { width: auto; min-width: 0; max-width: 420px; margin: 26px auto 0; }
+    .hreport::before { right: auto; left: 50%; transform: translateX(-50%); }
+    .acts { gap: 3px; }
+    .howto-note { text-align: center; }
+  }
 
   /* guardian */
   .guard { background: var(--tint-2); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
@@ -279,7 +318,7 @@
   @media (min-width: 961px) {
     .expert { align-items: stretch; }
     .expert .tv { display: flex; flex-direction: column; }
-    .expert .tv img { flex: 1; min-height: 0; height: 100%; object-fit: cover; object-position: 50% 12%; }
+    .expert .tv img { flex: 1; min-height: 0; height: 100%; object-fit: cover; object-position: 50% 40%; }
     .expert .who .name { line-height: 1.1; }
   }
   @media (max-width: 960px) {
@@ -472,10 +511,17 @@
           <span class="eyebrow">How it works</span>
           <h2>측정부터 보호자 공유까지, 다섯 단계</h2>
         </div>
-        <figure class="figure">
-          <img src="img/flow.png" alt="서비스 흐름: 폰 거치, 말로 시작, 3종 동작, AI 포즈추정, 위험 등급 관리, 보호자 리포트 공유" loading="lazy">
-          <figcaption>폰을 거치하고 "시작"이라고 말하면 음성 안내에 따라 세 동작을 수행하고, 관절 33포인트 분석으로 등급을 산출해 맞춤 운동과 보호자 리포트로 이어집니다.</figcaption>
-        </figure>
+        <div class="howto" role="group" aria-label="측정 흐름 5단계">
+        <ol class="hsteps">
+          <li class="hs"><div class="hh"><b>1</b>폰 거치</div><div class="hv"><svg viewBox="0 0 160 150" aria-hidden="true"><ellipse cx="80" cy="142" rx="44" ry="5" fill="#0B2E3F" opacity=".12"/><path d="M80 112v26M58 140l22-6 22 6" stroke="#0B2E3F" stroke-width="5" stroke-linecap="round" fill="none"/><rect x="50" y="6" width="60" height="110" rx="11" fill="#0B1A22"/><rect x="55" y="12" width="50" height="98" rx="7" fill="#fff"/><rect x="72" y="16" width="16" height="4" rx="2" fill="#0B1A22"/><path d="M80 40l13 5v10c0 8-5.5 13.5-13 16.5-7.5-3-13-8.5-13-16.5V45z" fill="#0F7A9C"/><circle cx="80" cy="50" r="2.6" fill="#fff"/><path d="M80 53.4v6m0 0l-3.4 4.6m3.4-4.6l3.4 4.6M75.6 56h8.8" stroke="#fff" stroke-width="2" stroke-linecap="round"/><text x="80" y="88" text-anchor="middle" font-size="9.5" font-weight="800" fill="#0B2E3F" font-family="Pretendard, Malgun Gothic, sans-serif">낙상지키미</text></svg></div><p>전신이 보이게<br>정면에 세워 두기</p></li>
+          <li class="hs"><div class="hh"><b>2</b>말로 시작</div><div class="hv"><div class="talk"><img src="img/flow/face.jpg" alt="" width="320" height="320" loading="lazy"><span>시작</span><i aria-hidden="true"></i></div></div><p>“시작”이라고 말하면<br>카메라 · 음성 안내 시작</p></li>
+          <li class="hs"><div class="hh"><b>3</b>3종 동작</div><div class="hv"><div class="acts"><figure><img src="img/flow/act1.jpg" alt="" loading="lazy"><figcaption>한발서기</figcaption></figure><figure><img src="img/flow/act2.jpg" alt="" loading="lazy"><figcaption>의자 일어서기</figcaption></figure><figure><img src="img/flow/act3.jpg" alt="" loading="lazy"><figcaption>무릎 올리기</figcaption></figure></div></div><p>음성 안내에 따라<br>세 동작 수행 (약 5분)</p></li>
+          <li class="hs"><div class="hh"><b>4</b>AI 자세 분석</div><div class="hv"><svg viewBox="0 0 160 150" aria-hidden="true"><rect x="4" y="6" width="152" height="138" rx="12" fill="#0B2E3F"/><g stroke="#3FA9D8" stroke-width="2.4" stroke-linecap="round" fill="none" opacity=".9"><path d="M64 26v14M56 40h16M56 40l-6 18-3 16M72 40l6 18 3 16M56 40l2 32M72 40l-2 32M58 72h12M58 72l-2 24-2 24M70 72l2 24 2 24"/></g><circle cx="64" cy="20" r="7" fill="none" stroke="#3FA9D8" stroke-width="2.4"/><g fill="#B6F0FF" stroke="#15A6D4" stroke-width="1.2"><circle cx="64" cy="22" r="3.2"/><circle cx="56" cy="40" r="3.2"/><circle cx="72" cy="40" r="3.2"/><circle cx="50" cy="58" r="3.2"/><circle cx="78" cy="58" r="3.2"/><circle cx="47" cy="74" r="3.2"/><circle cx="81" cy="74" r="3.2"/><circle cx="58" cy="72" r="3.2"/><circle cx="70" cy="72" r="3.2"/><circle cx="56" cy="96" r="3.2"/><circle cx="72" cy="96" r="3.2"/><circle cx="54" cy="120" r="3.2"/><circle cx="74" cy="120" r="3.2"/></g><g fill="#3FA9D8"><rect x="104" y="64" width="8" height="18" rx="1.5" opacity=".5"/><rect x="116" y="52" width="8" height="30" rx="1.5" opacity=".7"/><rect x="128" y="38" width="8" height="44" rx="1.5"/></g><g stroke="#7BE36B" stroke-width="2.6" fill="none" stroke-linecap="round"><path d="M104 96l3 3 5-6M104 112l3 3 5-6M104 128l3 3 5-6"/></g><g fill="#5A7F92"><rect x="118" y="95" width="26" height="3" rx="1.5"/><rect x="118" y="111" width="26" height="3" rx="1.5"/><rect x="118" y="127" width="26" height="3" rx="1.5"/></g><text x="130" y="28" text-anchor="middle" font-size="10" font-weight="800" fill="#B6F0FF" font-family="Pretendard, Malgun Gothic, sans-serif">33</text></svg></div><p>관절 33포인트<br>정량 분석 · 채점</p></li>
+          <li class="hs"><div class="hh"><b>5</b>위험 등급 · 관리</div><div class="hv"><svg viewBox="0 0 160 150" aria-hidden="true"><path d="M24.0 90.0A56 56 0 0 1 39.7 53.1" stroke="#4CAF50" stroke-width="16" fill="none"/><path d="M41.8 51.0A56 56 0 0 1 79.0 36.0" stroke="#F2C230" stroke-width="16" fill="none"/><path d="M82.0 36.0A56 56 0 0 1 118.9 51.7" stroke="#F39237" stroke-width="16" fill="none"/><path d="M121.0 53.8A56 56 0 0 1 136.0 90.0" stroke="#E0533D" stroke-width="16" fill="none"/><line x1="80" y1="92" x2="63.5" y2="51.2" stroke="#0B2E3F" stroke-width="5" stroke-linecap="round"/><circle cx="80" cy="92" r="8" fill="#0B2E3F"/><g font-size="8.5" font-weight="700" fill="#5A6B76" font-family="Pretendard, Malgun Gothic, sans-serif"><text x="16" y="110" text-anchor="middle">양호</text><text x="144" y="110" text-anchor="middle">점검</text></g><rect x="38" y="116" width="84" height="24" rx="12" fill="#FFF1D6"/><text x="80" y="132" text-anchor="middle" font-size="12" font-weight="800" fill="#9A6200" font-family="Pretendard, Malgun Gothic, sans-serif">판정 · 관찰</text></svg></div><p>4단계 등급 산출<br>→ 맞춤 운동 안내</p></li>
+        </ol>
+        <div class="hreport"><svg viewBox="0 0 48 48" aria-hidden="true"><rect width="48" height="48" rx="12" fill="#fff" opacity=".14"/><circle cx="17" cy="17" r="5.5" fill="#fff"/><circle cx="31" cy="17" r="5.5" fill="#fff"/><path d="M8 36c0-6 4-10 9-10s9 4 9 10zM22 36c0-6 4-10 9-10s9 4 9 10z" fill="#fff"/><circle cx="24" cy="29" r="4" fill="#7FD3EC"/><path d="M17 40c0-4 3-6.5 7-6.5s7 2.5 7 6.5z" fill="#7FD3EC"/></svg><div><b>보호자(자녀) 리포트 공유</b><span>효도구독 · 기관 관리도구 제공</span></div></div>
+        <p class="howto-note">측정 흐름 개념도 · 인물 이미지는 AI로 생성한 예시입니다</p>
+      </div>
         <div class="flow">
           <div class="step"><h3>측정</h3><p>카메라 앞에 서서 말로 시작. 음성 안내를 따라 세 동작.</p></div>
           <div class="step"><h3>판정</h3><p>임상 기준으로 양호 · 관찰 · 관심 필요 · 점검 권장 4단계.</p></div>
@@ -519,12 +565,15 @@
       </div>
       <div class="expert">
         <figure class="tv">
-          <img src="img/expert/profile.jpg" alt="낙상지키미 설계자 정경 물리치료사 프로필 사진" loading="lazy" width="960" height="1200">
-          <figcaption>정경 · 물리치료사 24년차, 바스제로컨설팅 대표</figcaption>
+          <img src="img/expert/tv.jpg" alt="TV조선 「100세 인생 안녕하십니까」에 물리치료사로 출연한 정경 대표" loading="lazy" width="610" height="460">
+          <figcaption>TV조선 「100세 인생 안녕하십니까」 출연 — 물리치료사 정경</figcaption>
         </figure>
         <div class="who">
-          <div class="name">정경</div>
-          <div class="role">물리치료사 · 바스제로컨설팅 대표</div>
+          <div class="id">
+            <img class="avatar" src="img/expert/avatar.jpg" alt="정경 대표 프로필 사진" width="240" height="240" loading="lazy">
+            <div><div class="name">정경</div>
+            <div class="role">물리치료사 · 바스제로컨설팅 대표</div></div>
+          </div>
           <p>도수치료실 센터장 출신으로 24년간 환자와 어르신을 직접 치료해 왔습니다. 낙상지키미의 판별 기준과 측정 동작, 맞춤 운동을 외부에 맡기지 않고 직접 설계했습니다.</p>
           <ul class="cred">
             <li><span>임상</span><span>물리치료사 24년차 · 도수치료실 센터장 출신</span></li>
@@ -536,7 +585,6 @@
         </div>
       </div>
       <div class="gallery">
-        <figure><img src="img/expert/tv.jpg" alt="TV조선 「100세 인생 안녕하십니까」에 물리치료사로 출연한 장면" loading="lazy"><figcaption>TV조선 「100세 인생 안녕하십니까」 출연</figcaption></figure>
         <figure><img src="img/expert/clinic.jpg" alt="환자의 다리를 직접 치료하는 정경 물리치료사" loading="lazy"><figcaption>임상 현장 — 도수치료</figcaption></figure>
         <figure><img class="top" src="img/expert/exercise.jpg" alt="밴드를 이용한 균형 운동을 시범 보이는 정경 대표" loading="lazy"><figcaption>세라밴드 균형 운동 시범</figcaption></figure>
         <figure><img src="img/expert/hall.jpg" alt="강당에서 의료기관 직원 대상으로 진행한 강의" loading="lazy"><figcaption>의료기관 직원 교육</figcaption></figure>
