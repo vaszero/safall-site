@@ -170,6 +170,13 @@
   footer p { margin: 3px 0; }
   .disc { margin-top: 18px; padding: 12px 14px; border: 1px solid var(--line); border-radius: 8px; background: var(--tint-2); color: #3F4F59; }
 
+
+  @media (min-width: 961px) {
+    .expert { align-items: stretch; }
+    .expert .tv { display: flex; flex-direction: column; }
+    .expert .tv img { flex: 1; min-height: 0; height: 100%; object-fit: cover; object-position: 50% 30%; }
+    .expert .who .name { line-height: 1.1; }
+  }
   @media (max-width: 960px) {
     .hero .wrap { grid-template-columns: 1fr; gap: 28px; }
     .stats .grid { grid-template-columns: repeat(2, 1fr); }
